@@ -1,0 +1,29 @@
+name: Django Blue-Green Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker Images
+        run: |
+          docker-compose build
+
+      - name: Start Services
+        run: docker-compose up -d
+
+      - name: Health Check Green
+        run: ./scripts/health_check.sh http://localhost:8002
+
+      - name: Switch NGINX to Green
+        run: |
+          sed -i 's/app-blue:8000/app-green:8000/' nginx/nginx.conf
+          docker cp nginx/nginx.conf nginx:/etc/nginx/nginx.conf
+          docker exec nginx nginx -s reload
