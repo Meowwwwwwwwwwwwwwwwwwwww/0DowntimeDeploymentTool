@@ -4,6 +4,7 @@ services:
   app-blue:
     build: .
     container_name: app-blue
+    dockerfile: Dockerfile.blue
     environment:
       - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
       - VERSION=blue
@@ -13,6 +14,7 @@ services:
   app-green:
     build: .
     container_name: app-green
+    dockerfile: Dockerfile.blue
     environment:
       - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
       - VERSION=green
