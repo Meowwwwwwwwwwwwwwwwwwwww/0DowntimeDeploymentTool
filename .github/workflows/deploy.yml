@@ -1,29 +1,31 @@
-name: Django Blue-Green Deployment
+name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build Docker Images
+      - name: Install Docker Compose
         run: |
-          docker-compose build
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
 
-      - name: Start Services
+      - name: Build with Docker Compose
+        run: docker-compose build
+
+      - name: Run containers
         run: docker-compose up -d
 
-      - name: Health Check Green
-        run: ./scripts/health_check.sh http://localhost:8002
-
-      - name: Switch NGINX to Green
+      - name: Install Docker Compose V2
         run: |
-          sed -i 's/app-blue:8000/app-green:8000/' nginx/nginx.conf
-          docker cp nginx/nginx.conf nginx:/etc/nginx/nginx.conf
-          docker exec nginx nginx -s reload
+          sudo apt-get update
+          sudo apt-get install -y docker-compose-plugin
