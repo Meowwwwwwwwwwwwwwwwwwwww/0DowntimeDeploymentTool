@@ -2,9 +2,10 @@ version: '3.8'
 
 services:
   app-blue:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.green   # reuse the same Dockerfile
     container_name: app-blue
-    dockerfile: Dockerfile.blue
     environment:
       - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
       - VERSION=blue
@@ -12,9 +13,10 @@ services:
       - "8001:8000"
 
   app-green:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile.green   # reuse the same Dockerfile
     container_name: app-green
-    dockerfile: Dockerfile.blue
     environment:
       - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
       - VERSION=green
@@ -27,8 +29,7 @@ services:
     ports:
       - "80:80"
     volumes:
-     
-      - ./nginx/nginx.conf:/etc/nginx.conf
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # corrected path inside container
       - ./static:/app/static
       - ./media:/app/media
     depends_on:

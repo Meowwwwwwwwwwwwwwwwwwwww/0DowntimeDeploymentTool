@@ -14,18 +14,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
-
-      - name: Build with Docker Compose
-        run: docker-compose build
-
-      - name: Run containers
-        run: docker-compose up -d
-
-      - name: Install Docker Compose V2
+      - name: Install Docker Compose v2
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-compose-plugin
+
+      - name: Build with Docker Compose
+        run: docker compose build
+
+      - name: Run containers
+        run: docker compose up -d
