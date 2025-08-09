@@ -14,10 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Docker Compose v2
+      - name: Install Docker & Docker Compose v2
         run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose-plugin
+         curl -fsSL https://get.docker.com | sh
+         sudo apt-get install -y docker-compose-plugin
+
 
       - name: Build with Docker Compose
         run: docker compose build
