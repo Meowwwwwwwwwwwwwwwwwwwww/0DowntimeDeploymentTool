@@ -1,25 +1,25 @@
-version: "3.8"
+version: '3.8'
 
 services:
   app-blue:
     build:
       context: .
-      dockerfile: Dockerfile  # use main Dockerfile instead of missing Dockerfile.blue
+      dockerfile: Dockerfile.blue
     container_name: app-blue
     environment:
-      DJANGO_SETTINGS_MODULE: downtimedeployment.settings
-      VERSION: blue
+      - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
+      - VERSION=blue
     ports:
       - "8001:8000"
 
   app-green:
     build:
       context: .
-      dockerfile: Dockerfile  # same main Dockerfile
+      dockerfile: Dockerfile.blue
     container_name: app-green
     environment:
-      DJANGO_SETTINGS_MODULE: downtimedeployment.settings
-      VERSION: green
+      - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
+      - VERSION=green
     ports:
       - "8002:8000"
 
@@ -29,8 +29,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      # Make sure nginx.conf exists and is a file, not a directory
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./static:/app/static
       - ./media:/app/media
     depends_on:
