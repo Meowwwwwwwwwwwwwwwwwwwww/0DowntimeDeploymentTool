@@ -1,37 +1,35 @@
-version: '3.8'
-
 services:
   app-blue:
     build:
       context: .
-      dockerfile: Dockerfile.green   # reuse the same Dockerfile
+      dockerfile: Dockerfile.green
     container_name: app-blue
     environment:
-      - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
-      - VERSION=blue
+      DJANGO_SETTINGS_MODULE: downtimedeployment.settings
+      VERSION: blue
     ports:
       - "8001:8000"
 
   app-green:
     build:
       context: .
-      dockerfile: Dockerfile.green   # reuse the same Dockerfile
+      dockerfile: Dockerfile.green
     container_name: app-green
     environment:
-      - DJANGO_SETTINGS_MODULE=downtimedeployment.settings
-      - VERSION=green
+      DJANGO_SETTINGS_MODULE: downtimedeployment.settings
+      VERSION: green
     ports:
       - "8002:8000"
 
   nginx:
-  image: nginx:alpine
-  container_name: nginx-proxy
-  ports:
-    - "80:80"
-  volumes:
-    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-    - ./static:/app/static
-    - ./media:/app/media
-  depends_on:
-    - app-blue
-    - app-green
+    image: nginx:alpine
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/app/static
+      - ./media:/app/media
+    depends_on:
+      - app-blue
+      - app-green
